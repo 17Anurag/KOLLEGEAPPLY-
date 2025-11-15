@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>University Landing Pages</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+            max-width: 600px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .university-links {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .university-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            text-decoration: none;
+            transition: transform 0.3s ease;
+            min-width: 200px;
+        }
+        .university-card:hover {
+            transform: translateY(-5px);
+        }
+        .university-card h2 {
+            margin: 0 0 10px 0;
+        }
+        .university-card p {
+            margin: 0;
+            opacity: 0.9;
+        }
+        @media (max-width: 768px) {
+            .university-links {
+                flex-direction: column;
+            }
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>University Landing Pages</h1>
+        <p>Choose a university to explore:</p>
+        <div class="university-links">
+            <a href="mit-university.html" class="university-card">
+                <h2>MIT University</h2>
+                <p>Engineering Excellence</p>
+            </a>
+            <a href="stanford-university.html" class="university-card">
+                <h2>Stanford University</h2>
+                <p>Innovation & Technology</p>
+            </a>
+        </div>
+    </div>
+</body>
+</html>

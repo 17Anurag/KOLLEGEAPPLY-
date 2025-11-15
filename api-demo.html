@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Demo - University Data</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .api-section {
+            background: white;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .api-section h2 {
+            color: #333;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        .endpoint {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            margin: 10px 0;
+        }
+        pre {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .btn:hover {
+            background: #5a6fd8;
+        }
+        .response {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f0f8ff;
+            border-left: 4px solid #667eea;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>University API Demo</h1>
+    <p>This page demonstrates the working APIs that return simple and nested JSON data.</p>
+
+    <!-- Simple JSON API -->
+    <div class="api-section">
+        <h2>1. Simple JSON API - Universities List</h2>
+        <div class="endpoint">GET /api/universities</div>
+        <button class="btn" onclick="fetchSimpleAPI()">Fetch Simple JSON</button>
+        <div id="simple-response" class="response" style="display:none;"></div>
+    </div>
+
+    <!-- Nested JSON API -->
+    <div class="api-section">
+        <h2>2. Nested JSON API - Detailed University Data</h2>
+        <div class="endpoint">GET /api/universities/detailed</div>
+        <button class="btn" onclick="fetchNestedAPI()">Fetch Nested JSON</button>
+        <div id="nested-response" class="response" style="display:none;"></div>
+    </div>
+
+    <!-- Course Fees API -->
+    <div class="api-section">
+        <h2>3. Course Fees API - Dynamic Fee Structure</h2>
+        <div class="endpoint">GET /api/fees/:university</div>
+        <button class="btn" onclick="fetchFeesAPI('mit')">MIT Fees</button>
+        <button class="btn" onclick="fetchFeesAPI('stanford')">Stanford Fees</button>
+        <div id="fees-response" class="response" style="display:none;"></div>
+    </div>
+
+    <!-- Lead Submission API -->
+    <div class="api-section">
+        <h2>4. Lead Submission API - Form Data</h2>
+        <div class="endpoint">POST /api/leads</div>
+        <button class="btn" onclick="testLeadSubmission()">Test Lead Submission</button>
+        <div id="lead-response" class="response" style="display:none;"></div>
+    </div>
+
+    <script>
+        // API Data Sources
+        const API_DATA = {
+            simple: {
+                status: "success",
+                data: [
+                    {
+                        id: 1,
+                        name: "MIT University",
+                        location: "Mumbai, India",
+                        established: 1985,
+                        ranking: "Top 10 in India",
+                        type: "Private"
+                    },
+                    {
+                        id: 2,
+                        name: "Stanford University", 
+                        location: "California, USA",
+                        established: 1885,
+                        ranking: "#2 Globally",
+                        type: "Private"
+                    }
+                ]
+            },
+            nested: {
+                status: "success",
+                timestamp: new Date().toISOString(),
+                data: {
+                    universities: [
+                        {
+                            id: 1,
+                            name: "MIT University",
+                            details: {
+                                location: {
+                                    city: "Mumbai",
+                                    state: "Maharashtra",
+                                    country: "India",
+                                    coordinates: {
+                                        lat: 19.0760,
+                                        lng: 72.8777
+                                    }
+                                },
+                                stats: {
+                                    students: {
+                                        total: 15000,
+                                        undergraduate: 12000,
+                                        postgraduate: 3000
+                                    },
+                                    faculty: 800,
+                                    placement_rate: 95,
+                                    average_package: 850000
+                                },
+                                departments: [
+                                    {
+                                        name: "Computer Science",
+                                        head: "Dr. Rajesh Kumar",
+                                        courses: [
+                                            {
+                                                name: "B.Tech Computer Science",
+                                                duration: 4,
+                                                fee: {
+                                                    amount: 250000,
+                                                    currency: "INR",
+                                                    per: "year"
+                                                },
+                                                specializations: ["AI/ML", "Cybersecurity", "Data Science"]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        name: "Mechanical Engineering",
+                                        head: "Dr. Priya Sharma",
+                                        courses: [
+                                            {
+                                                name: "B.Tech Mechanical",
+                                                duration: 4,
+                                                fee: {
+                                                    amount: 225000,
+                                                    currency: "INR",
+                                                    per: "year"
+                                                },
+                                                specializations: ["Robotics", "Automotive", "Manufacturing"]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            fees: {
+                mit: {
+                    university: "MIT University",
+                    currency: "INR",
+                    courses: [
+                        {
+                            name: "B.Tech Computer Science",
+                            fee_range: {
+                                min: 250000,
+                                max: 300000
+                            },
+                            additional_fees: {
+                                hostel: 80000,
+                                mess: 45000,
+                                library: 5000
+                            }
+                        },
+                        {
+                            name: "MBA",
+                            fee_range: {
+                                min: 450000,
+                                max: 550000
+                            },
+                            additional_fees: {
+                                hostel: 100000,
+                                mess: 50000,
+                                library: 10000
+                            }
+                        }
+                    ]
+                },
+                stanford: {
+                    university: "Stanford University",
+                    currency: "USD",
+                    courses: [
+                        {
+                            name: "Computer Science",
+                            fee_range: {
+                                min: 55000,
+                                max: 65000
+                            },
+                            additional_fees: {
+                                housing: 18000,
+                                meal_plan: 16000,
+                                books: 1200
+                            }
+                        },
+                        {
+                            name: "Business Administration",
+                            fee_range: {
+                                min: 75000,
+                                max: 85000
+                            },
+                            additional_fees: {
+                                housing: 20000,
+                                meal_plan: 18000,
+                                books: 1500
+                            }
+                        }
+                    ]
+                }
+            }
+        };
+
+        // Simulate API calls
+        function fetchSimpleAPI() {
+            const response = document.getElementById('simple-response');
+            response.style.display = 'block';
+            response.innerHTML = '<h3>Response:</h3><pre>' + JSON.stringify(API_DATA.simple, null, 2) + '</pre>';
+        }
+
+        function fetchNestedAPI() {
+            const response = document.getElementById('nested-response');
+            response.style.display = 'block';
+            response.innerHTML = '<h3>Response:</h3><pre>' + JSON.stringify(API_DATA.nested, null, 2) + '</pre>';
+        }
+
+        function fetchFeesAPI(university) {
+            const response = document.getElementById('fees-response');
+            const data = API_DATA.fees[university];
+            response.style.display = 'block';
+            response.innerHTML = '<h3>Response for ' + university.toUpperCase() + ':</h3><pre>' + JSON.stringify(data, null, 2) + '</pre>';
+        }
+
+        function testLeadSubmission() {
+            const sampleLead = {
+                fullName: "John Doe",
+                email: "john.doe@example.com",
+                phone: "9876543210",
+                state: "Maharashtra",
+                course: "B.Tech Computer Science",
+                intake: "2025",
+                university: "MIT University",
+                timestamp: new Date().toISOString(),
+                consent: true
+            };
+
+            const mockResponse = {
+                status: "success",
+                message: "Lead submitted successfully",
+                lead_id: "LEAD_" + Date.now(),
+                data: sampleLead
+            };
+
+            const response = document.getElementById('lead-response');
+            response.style.display = 'block';
+            response.innerHTML = '<h3>Sample Lead Data:</h3><pre>' + JSON.stringify(sampleLead, null, 2) + '</pre>' +
+                               '<h3>Mock API Response:</h3><pre>' + JSON.stringify(mockResponse, null, 2) + '</pre>';
+        }
+    </script>
+</body>
+</html>
